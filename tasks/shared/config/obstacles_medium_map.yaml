@@ -1,0 +1,40 @@
+dynamic:
+  obstacle:
+    oscillation: false
+    speed_ms: 1
+    spawn_position:
+      x: 0
+      y: 0
+    path:
+      points:
+        - x: 1
+          y: 1
+        - x: 2
+          y: 2
+        - x: 3
+          y: 3
+        - x: 4
+          y: 1
+
+  obstacle_two:
+    oscillation: true
+    speed_ms: 3
+    spawn_position:
+      x: 5
+      y: 5
+    path:
+      points:
+        - x: 8
+          y: 8
+        - x: 9
+          y: 9
+        - x: 1
+          y: 4
+        - x: 4
+          y: 1
+
+static:
+  rock_one:
+    spawn_position:
+      x: 3
+      y: 2

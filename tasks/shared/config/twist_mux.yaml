@@ -1,0 +1,26 @@
+twist_mux:
+  ros__parameters:
+    # All command sources (wasd, path follower, zero floor) publish plain
+    # geometry_msgs/Twist, and the robot's Gazebo bridge expects plain Twist
+    # on /<robot>/cmd_vel -- so the whole mux chain is unstamped.
+    use_stamped: false
+
+    topics:
+      # Manual teleop -- highest priority. The wasd node only publishes while a
+      # key is held, so it preempts the others on demand and releases otherwise.
+      wasd:
+        topic: /cmd_vel/wasd
+        timeout: 0.5
+        priority: 100
+
+      # Autonomous path follower.
+      path:
+        topic: /cmd_vel/path
+        timeout: 0.5
+        priority: 50
+
+      # Constant zero velocity -- lowest priority safe floor.
+      zero:
+        topic: /cmd_vel/zero
+        timeout: 0.5
+        priority: 10

@@ -1,0 +1,155 @@
+# == Shared settings
+# Extension fields (x-*) and YAML anchors (&*) are used as templates to keep
+# service definitions DRY and consistent.
+
+x-common-env: &common-env
+  RMW_IMPLEMENTATION: rmw_cyclonedds_cpp
+  QT_X11_NO_MITSHM: 1
+  ROS_DISTRO: ${ROS_DISTRO:-jazzy}
+
+x-common-host: &common-host
+  ipc: host
+  privileged: true
+  network_mode: bridge
+
+x-common-bridge: &common-bridge
+  ipc: host
+  privileged: true
+
+# == Volume sets
+# Keep volume anchors separate because YAML merge (<<:) does not deep-merge lists.
+
+x-linux-volumes: &linux-volumes
+  volumes:
+    - ./:/opt/ros_ws
+    - /tmp/.X11-unix:/tmp/.X11-unix:rw
+
+x-windows-volumes: &windows-volumes
+  volumes:
+    - ./:/opt/ros_ws
+    - /run/desktop/mnt/host/wslg/.X11-unix:/tmp/.X11-unix
+    - /run/desktop/mnt/host/wslg:/mnt/wslg
+
+x-vnc-volumes: &vnc-volumes
+  volumes:
+    - ./:/opt/ros_ws
+
+# == Build definitions
+
+x-build-common: &build-common
+  context: .
+  dockerfile: Dockerfile
+  args:
+    ROS_DISTRO: ${ROS_DISTRO:-jazzy}
+
+x-build-base: &build-base
+  build:
+    <<: *build-common
+    target: base
+
+x-build-linux: &build-linux
+  build:
+    <<: *build-common
+    target: linux
+
+x-build-windows: &build-windows
+  build:
+    <<: *build-common
+    target: windows
+
+x-build-vnc: &build-vnc
+  build:
+    <<: *build-common
+    target: vnc
+
+# == Shared command (colcon build loop)
+x-colcon-command: &colcon-command
+  - /bin/bash
+  - -lc
+  - |
+    set -e
+    source /opt/ros/${ROS_DISTRO:-jazzy}/setup.bash
+    cd /opt/ros_ws
+    if [ -d src ] && find src -name package.xml -print -quit | grep -q .; then
+      colcon build --symlink-install
+      if [ -f install/setup.bash ]; then
+        source install/setup.bash
+      fi
+    else
+      echo "No ROS packages found under /opt/ros_ws/src; skipping colcon build."
+    fi
+    exec tail -f /dev/null
+
+services:
+  # == Debug
+  # Minimal ROS environment for diagnostics and manual commands.
+  debug:
+    <<: [*common-host, *linux-volumes, *build-base]
+    profiles: ["ag-debug"]
+    image: ag/debug
+    container_name: ag-debug
+    environment:
+      <<: *common-env
+      DISPLAY: ${DISPLAY}
+    command: sleep infinity
+
+  # == Linux flavor (native X11)
+  linux:
+    <<: [*common-host, *linux-volumes, *build-linux]
+    profiles: ["ag-linux"]
+    image: ag/linux
+    container_name: ag-linux
+    environment:
+      <<: *common-env
+      DISPLAY: ${DISPLAY}
+    command: *colcon-command
+
+  # == Windows flavor (WSLg / external X server)
+  windows:
+    <<: [*common-host, *windows-volumes, *build-windows]
+    profiles: ["ag-windows"]
+    image: ag/windows
+    container_name: ag-windows
+    environment:
+      <<: *common-env
+      DISPLAY: :0
+      WAYLAND_DISPLAY: wayland-0
+      XDG_RUNTIME_DIR: /run/user/1000
+      PULSE_SERVER: /mnt/wslg/PulseServer
+    command: *colcon-command
+
+  # == VNC fallback flavor
+  vnc:
+    <<: [*common-bridge, *vnc-volumes, *build-vnc]
+    profiles: ["ag-vnc"]
+    image: ag/vnc
+    container_name: ag-vnc
+    environment:
+      <<: *common-env
+      DISPLAY: ":1"
+    ports:
+      - "5900:5900"
+      - "6080:6080"
+
+  # == Linux flavor with NVIDIA GPU passthrough
+  linux-nvidia:
+    <<: [*common-host, *linux-volumes]
+    profiles: ["ag-linux-nvidia"]
+    image: ag/linux-nvidia
+    container_name: ag-linux-nvidia
+    build:
+      <<: *build-common
+      target: linux
+      args:
+        ENABLE_NVIDIA: "true"
+    environment:
+      <<: *common-env
+      DISPLAY: ${DISPLAY}
+    command: *colcon-command
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
