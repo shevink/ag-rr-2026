@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <model name="ground_plane">
+    <static>true</static>
+    <link name="link">
+      <!-- Collision plane matches the road grid extents -->
+      <collision name="collision">
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+          </plane>
+        </geometry>
+      </collision>
+      <!-- Visual plane extends beyond collision for edge fill coverage -->
+      <visual name="visual">
+        <pose>4 4 0 0 0 0</pose>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>8 8</size>
+          </plane>
+        </geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse> <!--Manually tested: This setting matters for the whiteness of the lane lines-->
+          <pbr>
+            <metal>
+              <albedo_map>../textures/easy_map.png</albedo_map>
+              <metalness>0.0</metalness>  <!--Manually tested: This setting matters for the whiteness of the lane lines-->
+              <roughness>1.0</roughness>  <!--Manually tested: This setting matters for the whiteness of the lane lines-->
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

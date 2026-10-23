@@ -1,0 +1,7 @@
+# Bridges the raw Gazebo camera sensor into ROS as an uncompressed
+# sensor_msgs/Image for the virtual camera node (camera_publisher_node).
+- ros_topic_name: "/camera_high/image_gz"
+  gz_topic_name: "/model/racer/camera_high/image_raw"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS

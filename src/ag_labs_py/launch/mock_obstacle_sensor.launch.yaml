@@ -1,0 +1,38 @@
+launch:
+  # Nutzen der Simulations-Zeit für alle gestarteten Nodes
+  - set_parameter:
+      name: "use_sim_time"
+      value: "true"
+
+  # Starte TF-Broadcaster, der die Odometrie in Transform umwandelt
+  - node:
+      pkg: "ag_labs_py"
+      exec: "odom_to_tf"
+      param:
+        - name: "odom_topic"
+          value: "/racer/odom"
+        - name: "parent_frame"
+          value: "racer/odom"
+        - name: "child_frame"
+          value: "racer/base_footprint"
+
+  - node:
+      pkg: "ag_labs_py"
+      exec: "mock_obstacle_sensor"
+      param:
+        - name: "update_rate"
+          value: 10.0
+        - name: "detection_range"
+          value: 2.0
+        - name: "minimum_distance"
+          value: 0.1
+        - name: "field_of_view"
+          value: 1.571
+        - name: "source_frame"
+          value: "racer/base_footprint"
+        - name: "fixed_frame"
+          value: "racer/odom"
+        - name: "auto_configure_obstacles"
+          value: true
+        - name: "obstacle_sizes"
+          value: [0.2]

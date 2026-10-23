@@ -1,0 +1,54 @@
+# IPM parameters for the high camera (bird's eye view).
+# Ported from the legacy ros_racer_vision config. Topics adapted from the
+# original /compressed image topics to raw sensor_msgs/Image, since the
+# simulated pipeline runs uncompressed (see camera_publisher_node).
+ipm_high_node:
+  ros__parameters:
+    # Input/Output Topics (can be overridden in the launch file)
+    input_topic: "/camera/image_raw"
+    output_topic: "/camera/ipm_image"
+
+    # Output Image Dimensions (bird's eye view)
+    output_width: 640
+    output_height: 480
+
+    # Frame ID for transformed image (virtual BEV ground frame)
+    frame_id: "ipm_ground_virtuallink"
+
+    # Camera Undistortion (optional)
+    enable_undistortion: false
+
+    # Camera calibration matrix (3x3) - fx, 0, cx, 0, fy, cy, 0, 0, 1
+    camera_matrix: [640.0, 0.0, 320.0, 0.0, 640.0, 240.0, 0.0, 0.0, 1.0]
+
+    # Distortion coefficients [k1, k2, p1, p2, k3]
+    distortion_coefficients: [0.0, 0.0, 0.0, 0.0, 0.0]
+
+    # ============================================================
+    # Perspective Transform Points (Trapezoid -> Rectangle)
+    # ============================================================
+    # Source points define the trapezoid region in the camera image
+    # Order: top-left, top-right, bottom-right, bottom-left
+    src_points: [
+      20.0,
+      50.0,
+      620.0,
+      50.0,
+      620.0,
+      470.0,
+      20.0,
+      470.0
+    ]
+
+    # Destination points define the rectangle in the output bird's eye view
+    # Order: top-left, top-right, bottom-right, bottom-left
+    dst_points: [
+      160.0,
+      0.0,
+      480.0,
+      0.0,
+      480.0,
+      479.0,
+      160.0,
+      479.0
+    ]

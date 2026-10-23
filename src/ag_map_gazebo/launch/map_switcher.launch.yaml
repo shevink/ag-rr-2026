@@ -1,0 +1,8 @@
+launch:
+  # Start the map switcher node for runtime texture swapping
+  - node:
+      pkg: ag_map_gazebo
+      exec: map_switcher_node
+      param:
+        - name: "use_sim_time"
+          value: "true"

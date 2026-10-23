@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>ag_map_gazebo</name>
+  <version>0.0.0</version>
+  <description>Package for runtime map loading and swapping in Gazebo simulation</description>
+  <maintainer email="smart-driving@htwk-leipzig.de">malte</maintainer>
+  <license>CC-BY-SA-4.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>std_srvs</depend>
+  <depend>ament_index_cpp</depend>
+  <depend>gz_transport_vendor</depend>
+  <depend>gz_sim_vendor</depend>
+  <depend>gz_msgs_vendor</depend>
+
+  <exec_depend>rosidl_default_runtime</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
