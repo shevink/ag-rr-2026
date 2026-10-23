@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <material name="body_blue">
+    <color rgba="0.05 0.22 0.85 1.0" />
+  </material>
+
+  <material name="dark_grey">
+    <color rgba="0.08 0.08 0.08 1.0" />
+  </material>
+
+  <material name="light_grey">
+    <color rgba="0.75 0.75 0.75 1.0" />
+  </material>
+
+  <material name="amber">
+    <color rgba="1.0 0.58 0.0 1.0" />
+  </material>
+
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0" />
+  </material>
+
+  <xacro:property name="car_length" value="0.32" />
+  <xacro:property name="car_width" value="0.16" />
+  <xacro:property name="car_height" value="0.08" />
+  <xacro:property name="car_mass" value="2.4" />
+
+  <xacro:property name="wheel_radius" value="0.035" />
+  <xacro:property name="wheel_width" value="0.018" />
+  <xacro:property name="wheel_mass" value="0.08" />
+  <xacro:property name="wheel_y" value="0.095" />
+  <xacro:property name="wheel_x" value="0.0" />
+
+  <xacro:property name="caster_radius" value="0.018" />
+  <xacro:property name="caster_mass" value="0.02" />
+  <xacro:property name="ground_clearance" value="0.012" />
+</robot>

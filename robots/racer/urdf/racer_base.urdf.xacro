@@ -1,0 +1,227 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">    
+
+    <!--links-->
+    <link name="base_footprint" />
+    <link name="ipm_ground_virtuallink" />
+
+    <xacro:box name="base_mid" length="${base_mid_length}" width="${base_mid_width}" height="${base_mid_height}" weight="${base_mid_weight}" color="dark" />
+    <xacro:box name="base_front" length="${base_front_length}" width="${base_front_width}" height="${base_front_height}" weight="${base_front_weight}" color="dark" />
+    <xacro:box name="base_back" length="${base_back_length}" width="${base_back_width}" height="${base_back_height}" weight="${base_back_weight}" color="dark" />
+
+    <xacro:box name="bumper_front" length="${bumper_front_length}" width="${bumper_front_width}" height="${bumper_front_height}" weight="${bumper_front_weight}" color="dark_grey" />
+    <xacro:box name="bumper_front_light" length="${bumper_light_length}" width="${bumper_front_width}" height="${bumper_front_height}" weight="${bumper_light_weight}" color="yellow" />
+    <xacro:box name="bumper_back" length="${bumper_back_length}" width="${bumper_back_width}" height="${bumper_back_height}" weight="${bumper_back_weight}" color="dark_grey" />
+    <xacro:box name="bumper_back_light" length="${bumper_light_length}" width="${bumper_back_width}" height="${bumper_back_height}" weight="${bumper_light_weight}" color="orange" />
+
+    <xacro:axis prefix="front" />
+    <xacro:axis prefix="back" />
+
+    <xacro:wheel prefix="back_right" />
+    <xacro:wheel prefix="back_left" />
+    <xacro:wheel prefix="front_right" />
+    <xacro:wheel prefix="front_left" />
+
+    <xacro:front_steering_mount position="right" />
+    <xacro:front_steering_mount position="left" />
+
+    <xacro:box name="battery" length="${battery_length}" width="${battery_width}" height="${battery_height}" weight="${battery_weight}" color="grey" />
+
+    <xacro:box name="base_front_spacer" length="${base_spacer_length}" width="${base_spacer_width}" height="${base_spacer_height}" weight="${base_spacer_weight}" color="dark" />
+    <xacro:box name="base_back_spacer" length="${base_spacer_length}" width="${base_spacer_width}" height="${base_spacer_height}" weight="${base_spacer_weight}" color="dark" />
+    <xacro:box name="carrier_plate" length="${carrier_plate_length}" width="${carrier_plate_width}" height="${carrier_plate_height}" weight="${carrier_plate_weight}" color="dark_grey" />
+
+    <xacro:box name="raspberry_pi" length="${raspberry_pi_length}" width="${raspberry_pi_width}" height="${raspberry_pi_height}" weight="${raspberry_pi_weight}" color="dark_grey" />
+    <xacro:box name="esc_stack" length="${esc_stack_length}" width="${esc_stack_width}" height="${esc_stack_height}" weight="${esc_stack_weight}" color="dark_grey" />
+    <xacro:box name="camera_stack" length="${camera_stack_length}" width="${camera_stack_width}" height="${camera_stack_height}" weight="${camera_stack_weight}" color="dark_grey" />
+    <xacro:box name="camera_high" length="${camera_length}" width="${camera_width}" height="${camera_height}" weight="${camera_weight}" color="black" />
+    <xacro:box name="electronics_box_front" length="${electronics_box_front_length}" width="${electronics_box_front_width}" height="${electronics_box_front_height}" weight="${electronics_box_front_weight}" color="dark_grey" />
+    <xacro:box name="electronics_box_back" length="${electronics_box_back_length}" width="${electronics_box_back_width}" height="${electronics_box_back_height}" weight="${electronics_box_back_weight}" color="dark_grey" />
+
+    <xacro:cylinder name="lidar_front" radius="${lidar_front_radius}" height="${lidar_front_height}" weight="${lidar_front_weight}" color="black" />
+    <xacro:box name="lidar_back" length="${lidar_back_length}" width="${lidar_back_width}" height="${lidar_back_height}" weight="${lidar_back_weight}" color="black" />
+
+    <xacro:imu_sensor_virtual name="imu" parent_link="base_mid_link" xyz="0 0 0" rpy="0 0 0" />
+
+    <!--joints-->
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint" />
+        <child link="base_mid_link" />
+        <origin xyz="0 0 ${wheel_radius - (base_mid_height / 2.0)}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_footprint_to_ipm_ground_joint" type="fixed">
+        <parent link="base_footprint" />
+        <child link="ipm_ground_virtuallink" />
+        <origin xyz="0.30 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_mid_to_base_front_joint" type="fixed">
+        <parent link="base_mid_link" />
+        <child link="base_front_link" />
+        <origin xyz="${(base_mid_length / 2.0) + (base_front_length / 2.0)} 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_mid_to_base_back_joint" type="fixed">
+        <parent link="base_mid_link" />
+        <child link="base_back_link" />
+        <origin xyz="${-(base_mid_length / 2.0) - (base_back_length / 2.0)} 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_front_to_bumper_front_joint" type="fixed">
+        <parent link="base_front_link" />
+        <child link="bumper_front_link" />
+        <origin xyz="${(base_front_length / 2.0) + (bumper_front_length / 2.0)} 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_back_to_bumper_back_joint" type="fixed">
+        <parent link="base_back_link" />
+        <child link="bumper_back_link" />
+        <origin xyz="${-(base_back_length / 2.0) - (bumper_back_length / 2.0)} 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="bumper_front_to_bumper_front_light_joint" type="fixed">
+        <parent link="bumper_front_link" />
+        <child link="bumper_front_light_link" />
+        <origin xyz="${(bumper_front_length / 2.0) + (bumper_light_length / 2.0)} 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="bumper_back_to_bumper_back_light_joint" type="fixed">
+        <parent link="bumper_back_link" />
+        <child link="bumper_back_light_link" />
+        <origin xyz="${-(bumper_back_length / 2.0) - (bumper_light_length / 2.0)} 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_mid_to_front_axis_joint" type="fixed">
+        <parent link="base_mid_link" />
+        <child link="front_axis_link" />
+        <origin xyz="${wheelbase / 2.0} 0 ${base_mid_height / 2.0}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_mid_to_back_axis_joint" type="fixed">
+        <parent link="base_mid_link" />
+        <child link="back_axis_link" />
+        <origin xyz="${-(wheelbase / 2.0)} 0 ${base_mid_height / 2.0}" rpy="0 0 0" />
+    </joint>
+
+
+    <joint name="back_right_wheel_joint" type="continuous">
+        <parent link="back_axis_link" />
+        <child link="back_right_wheel_link" />
+        <origin xyz="0 ${-(axis_length / 2.0 + wheel_width / 2.0)} 0" rpy="0 0 0" />
+        <axis xyz="0 1 0" />
+        <dynamics damping="0.1" friction="0.1"/>
+    </joint>
+
+    <joint name="back_left_wheel_joint" type="continuous">
+        <parent link="back_axis_link" />
+        <child link="back_left_wheel_link" />
+        <origin xyz="0 ${(axis_length / 2.0 + wheel_width / 2.0)} 0" rpy="0 0 0" />
+        <axis xyz="0 1 0" />
+        <dynamics damping="0.1" friction="0.1"/>
+    </joint>
+
+    <joint name="front_right_steering_joint" type="revolute">
+        <parent link="front_axis_link" />
+        <child link="front_right_steering_link" />
+        <origin xyz="0 ${-(axis_length / 2.0 + wheel_width / 2.0)} 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+        <limit lower="-0.5" upper="0.5" effort="10.0" velocity="5.0" /> <dynamics damping="0.7" friction="0.1"/>
+    </joint>
+
+    <joint name="front_right_wheel_joint" type="continuous">
+        <parent link="front_right_steering_link" />
+        <child link="front_right_wheel_link" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+
+    <joint name="front_left_steering_joint" type="revolute">
+        <parent link="front_axis_link" />
+        <child link="front_left_steering_link" />
+        <origin xyz="0 ${(axis_length / 2.0 + wheel_width / 2.0)} 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+        <limit lower="-0.5" upper="0.5" effort="10.0" velocity="5.0" /> <dynamics damping="0.7" friction="0.1"/>
+    </joint>
+
+    <joint name="front_left_wheel_joint" type="continuous">
+        <parent link="front_left_steering_link" />
+        <child link="front_left_wheel_link" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+
+    <joint name="base_mid_to_battery_joint" type="fixed">
+        <parent link="base_mid_link" />
+        <child link="battery_link" />
+        <origin xyz="0 0 ${(base_mid_height / 2.0) + (battery_height / 2.0)}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_mid_to_spacer_front_joint" type="fixed">
+        <parent link="base_mid_link" />
+        <child link="base_front_spacer_link" />
+        <origin xyz="${carrier_plate_length / 2.0 - (base_spacer_length / 2.0)} 0 ${base_mid_height}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_mid__to_spacer_back_joint" type="fixed">
+        <parent link="base_mid_link" />
+        <child link="base_back_spacer_link" />
+        <origin xyz="${-(carrier_plate_length / 2.0 - (base_spacer_length / 2.0))} 0 ${base_mid_height}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_mid_to_carrier_plate_joint" type="fixed">
+        <parent link="base_mid_link" />
+        <child link="carrier_plate_link" />
+        <origin xyz="0 0 ${base_mid_height + base_spacer_height}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="carrier_plate_to_raspberry_pi_joint" type="fixed">
+        <parent link="carrier_plate_link" />
+        <child link="raspberry_pi_link" />
+        <origin xyz="${(carrier_plate_length / 2.0) - (raspberry_pi_length / 2.0) - 0.015} 0 ${(carrier_plate_height)}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="carrier_plate_to_camera_stack_joint" type="fixed">
+        <parent link="carrier_plate_link" />
+        <child link="camera_stack_link" />
+        <origin xyz="${camera_stack_length / 2.0} 0 ${(carrier_plate_height)}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="camera_stack_to_camera_high_joint" type="fixed">
+        <parent link="camera_stack_link" />
+        <child link="camera_high_link" />
+        <origin
+            xyz="${(camera_stack_length / 2.0) + (camera_length / 2.0)} 0 ${camera_high_ground_height - ((wheel_radius - (base_mid_height / 2.0)) + (base_mid_height + base_spacer_height + carrier_plate_height))}"
+            rpy="0 0.50 0" />
+    </joint>
+
+    <joint name="carrier_plate_to_esc_stack_joint" type="fixed">
+        <parent link="carrier_plate_link" />
+        <child link="esc_stack_link" />
+        <origin xyz="${-((esc_stack_length / 2.0) + 0.015)} 0 ${(carrier_plate_height)}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="carrier_plate_to_electronics_box_front_joint" type="fixed">
+        <parent link="carrier_plate_link" />
+        <child link="electronics_box_front_link" />
+        <origin xyz="${(camera_stack_length + electronics_box_front_length / 2.0 + 0.002)} -0.01 ${(carrier_plate_height)}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="carrier_plate_to_electronics_box_back_joint" type="fixed">
+        <parent link="carrier_plate_link" />
+        <child link="electronics_box_back_link" />
+        <origin xyz="${-((esc_stack_length + 0.015) + electronics_box_back_length / 2.0 + 0.005)} 0 ${(carrier_plate_height)}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="bumper_front_to_lidar_front_joint" type="fixed">
+        <parent link="bumper_front_link" />
+        <child link="lidar_front_link" />
+        <origin xyz="${bumper_front_length / 2.0 - 0.04} 0 ${(bumper_front_height) + (lidar_front_height / 2.0)}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="bumper_back_to_lidar_back_joint" type="fixed">
+        <parent link="bumper_back_link" />
+        <child link="lidar_back_link" />
+        <origin xyz="${-(bumper_back_length / 2.0 - lidar_back_length / 2.0)} 0 ${(bumper_back_height / 2.0) + (lidar_back_height / 2.0)}" rpy="0 0 0" />
+    </joint>
+</robot>

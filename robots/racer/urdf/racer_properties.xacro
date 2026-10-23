@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--materials-->
+  <material name="green">
+    <color rgba="0 0.702 0.678 1" />
+  </material>
+
+  <material name="blue-green">
+    <color rgba="0 0.4 0.388 1" />
+  </material>
+
+  <material name="grey">
+    <color rgba="0.8 0.8 0.8 1" />
+  </material>
+
+  <material name="dark_grey">
+    <color rgba="0.5 0.5 0.5 1" />
+  </material>
+
+  <material name="dark">
+    <color rgba="0.30 0.30 0.30 1" />
+  </material>
+
+  <material name="black">
+    <color rgba="0.2 0.2 0.2 1" />
+  </material>
+
+  <material name="dark_orange">
+    <color rgba="0.4 0.141 0 1" />
+  </material>
+
+  <material name="orange">
+    <color rgba="0.835 0.4 0.184 1" />
+  </material>
+
+  <material name="yellow">
+    <color rgba="0.945 0.925 0.824 1" />
+  </material>
+
+  <!--properties lower car-->
+  <xacro:property name="wheelbase" value="0.26" />
+
+  <xacro:property name="wheel_radius" value="${0.065/2}" />
+  <xacro:property name="wheel_width" value="0.028" />
+  <xacro:property name="wheel_weight" value="0.015" />
+
+  <xacro:property name="axis_radius" value="0.01" />
+  <xacro:property name="axis_length" value="0.13" />
+  <xacro:property name="axis_weight" value="0.02" />
+
+  <xacro:property name="base_mid_length" value="0.17" />
+  <xacro:property name="base_mid_width" value="0.13" />
+  <xacro:property name="base_mid_height" value="0.03" />
+  <xacro:property name="base_mid_weight" value="0.5" />
+
+  <xacro:property name="base_front_length" value="0.103" />
+  <xacro:property name="base_front_width" value="0.07" />
+  <xacro:property name="base_front_height" value="0.03" />
+  <xacro:property name="base_front_weight" value="0.2" />
+  <xacro:property name="base_back_length" value="0.087" />
+  <xacro:property name="base_back_width" value="0.07" />
+  <xacro:property name="base_back_height" value="0.03" />
+  <xacro:property name="base_back_weight" value="0.2" />
+
+  <xacro:property name="bumper_front_length" value="0.04" />
+  <xacro:property name="bumper_front_width" value="0.17" />
+  <xacro:property name="bumper_front_height" value="0.03" />
+  <xacro:property name="bumper_front_weight" value="0.075" />
+
+  <xacro:property name="bumper_back_length" value="0.02" />
+  <xacro:property name="bumper_back_width" value="0.17" />
+  <xacro:property name="bumper_back_height" value="0.03" />
+  <xacro:property name="bumper_back_weight" value="0.09" />
+
+  <xacro:property name="bumper_light_length" value="0.001" />
+  <xacro:property name="bumper_light_weight" value="0.005" />
+
+  <!--properties upper car-->
+
+  <xacro:property name="battery_length" value="0.14" />
+  <xacro:property name="battery_width" value="0.04" />
+  <xacro:property name="battery_height" value="0.02" />
+  <xacro:property name="battery_weight" value="0.25" />
+
+  <xacro:property name="base_spacer_length" value="0.04" />
+  <xacro:property name="base_spacer_width" value="0.07" />
+  <xacro:property name="base_spacer_height" value="0.0125" />
+  <xacro:property name="base_spacer_weight" value="0.025" />
+
+  <xacro:property name="carrier_plate_length" value="0.268" />
+  <xacro:property name="carrier_plate_width" value="0.1" />
+  <xacro:property name="carrier_plate_height" value="0.01" />
+  <xacro:property name="carrier_plate_weight" value="0.1" />
+
+  <xacro:property name="raspberry_pi_length" value="0.065" />
+  <xacro:property name="raspberry_pi_width" value="0.1" />
+  <xacro:property name="raspberry_pi_height" value="0.028" />
+  <xacro:property name="raspberry_pi_weight" value="0.150" />
+
+  <xacro:property name="esc_stack_length" value="0.055" />
+  <xacro:property name="esc_stack_width" value="0.085" />
+  <xacro:property name="esc_stack_height" value="0.085" />
+  <xacro:property name="esc_stack_weight" value="0.150" />
+
+  <xacro:property name="camera_stack_length" value="0.025" />
+  <xacro:property name="camera_stack_width" value="0.075" />
+  <xacro:property name="camera_stack_height" value="0.095" />
+  <xacro:property name="camera_stack_weight" value="0.095" />
+
+  <xacro:property name="camera_length" value="0.001" />
+  <xacro:property name="camera_width" value="0.07" />
+  <xacro:property name="camera_height" value="0.025" />
+  <xacro:property name="camera_weight" value="0.005" />
+  <xacro:property name="camera_hz" value="30" />
+  <xacro:property name="camera_fov" value="1.089" />
+  <xacro:property name="camera_resolution_width" value="640" />
+  <xacro:property name="camera_resolution_height" value="480" />
+  <xacro:property name="camera_high_ground_height" value="0.30" />
+
+  <xacro:property name="electronics_box_front_length" value="0.025" />
+  <xacro:property name="electronics_box_front_width" value="0.06" />
+  <xacro:property name="electronics_box_front_height" value="0.015" />
+  <xacro:property name="electronics_box_front_weight" value="0.025" />
+
+  <xacro:property name="electronics_box_back_length" value="0.045" />
+  <xacro:property name="electronics_box_back_width" value="0.09" />
+  <xacro:property name="electronics_box_back_height" value="0.04" />
+  <xacro:property name="electronics_box_back_weight" value="0.025" />
+
+  <xacro:property name="lidar_front_radius" value="${0.035/2}" />
+  <xacro:property name="lidar_front_height" value="0.015" />
+  <xacro:property name="lidar_front_weight" value="0.01" />
+
+  <xacro:property name="lidar_back_length" value="0.015" />
+  <xacro:property name="lidar_back_width" value="0.03" />
+  <xacro:property name="lidar_back_height" value="0.025" />
+  <xacro:property name="lidar_back_weight" value="0.005" />
+
+  <xacro:property name="lidar_update_rate" value="10" />
+  <xacro:property name="lidar_samples" value="360" />
+  <xacro:property name="lidar_range_min" value="0.02" />
+  <xacro:property name="lidar_range_max" value="12.0" />
+</robot>

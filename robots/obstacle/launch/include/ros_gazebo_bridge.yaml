@@ -1,0 +1,11 @@
+- ros_topic_name: "/obstacle/cmd_vel"
+  gz_topic_name: "/obstacle/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/obstacle/pose_ground_truth"
+  gz_topic_name: "/model/obstacle/pose"
+  ros_type_name: "geometry_msgs/msg/PoseArray"
+  gz_type_name: "gz.msgs.Pose_V"
+  direction: GZ_TO_ROS

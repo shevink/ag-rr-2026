@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Gazebo Sim Systems / Plugins -->
+  <gazebo>
+    <!-- Plugin to control the robot using differential drive physics -->
+    <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>${2 * wheel_yg}</wheel_separation>
+      <wheel_radius>${wheel_radius}</wheel_radius>
+      <frame_id>disc_robot/odom</frame_id>
+      <child_frame_id>disc_robot/base_footprint</child_frame_id>
+    </plugin>
+
+    <!-- Plugin to publish the model's joint states -->
+    <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+      <joint_name>left_wheel_joint</joint_name>
+      <joint_name>right_wheel_joint</joint_name>
+    </plugin>
+
+    <!-- Plugin to publish the model's ground truth pose (odometry) -->
+    <plugin filename="gz-sim-pose-publisher-system" name="gz::sim::systems::PosePublisher">
+      <publish_link_pose>false</publish_link_pose>
+      <publish_model_pose>true</publish_model_pose>
+      <publish_nested_models>false</publish_nested_models>
+      <use_pose_vector_msg>true</use_pose_vector_msg>
+      <update_frequency>50</update_frequency>
+    </plugin>
+  </gazebo>
+
+  <!-- Gazebo Physics & Visual Properties for the Base Link -->
+  <gazebo reference="base_link">
+    <mu1>0.5</mu1>
+    <mu2>0.5</mu2>
+    <kp>1000000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <visual>
+      <material>
+        <ambient>0.15 0.15 0.15 1.0</ambient>
+        <diffuse>0.15 0.15 0.15 1.0</diffuse>
+        <specular>0.8 0.8 0.8 1.0</specular>
+      </material>
+    </visual>
+  </gazebo>
+
+  <!-- Glowing LED ring visual styling in Gazebo -->
+  <gazebo reference="led_ring_link">
+    <visual>
+      <material>
+        <ambient>0.0 0.5 1.0 1.0</ambient>
+        <diffuse>0.0 0.5 1.0 1.0</diffuse>
+        <specular>1.0 1.0 1.0 1.0</specular>
+        <emissive>0.0 0.5 1.0 1.0</emissive>
+      </material>
+    </visual>
+  </gazebo>
+
+  <!-- Glowing Heading indicator visual styling in Gazebo -->
+  <gazebo reference="heading_indicator_link">
+    <visual>
+      <material>
+        <ambient>1.0 0.6 0.0 1.0</ambient>
+        <diffuse>1.0 0.6 0.0 1.0</diffuse>
+        <specular>1.0 1.0 1.0 1.0</specular>
+        <emissive>1.0 0.6 0.0 1.0</emissive>
+      </material>
+    </visual>
+  </gazebo>
+
+  <!-- Drive Wheels friction & physics -->
+  <gazebo reference="left_wheel_link">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <visual>
+      <material>
+        <ambient>0.3 0.3 0.3 1.0</ambient>
+        <diffuse>0.3 0.3 0.3 1.0</diffuse>
+        <specular>0.8 0.8 0.8 1.0</specular>
+      </material>
+    </visual>
+  </gazebo>
+
+  <gazebo reference="right_wheel_link">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <visual>
+      <material>
+        <ambient>0.3 0.3 0.3 1.0</ambient>
+        <diffuse>0.3 0.3 0.3 1.0</diffuse>
+        <specular>0.8 0.8 0.8 1.0</specular>
+      </material>
+    </visual>
+  </gazebo>
+
+  <xacro:macro name="gazebo_camera" params="link_name topic_name sensor_name:=camera">
+    <gazebo reference="${link_name}">
+      <sensor name="${sensor_name}" type="camera">
+        <update_rate>${camera_hz}</update_rate>
+        <topic>${topic_name}</topic>
+        <gz_frame_id>${link_name}</gz_frame_id>
+        <camera>
+          <horizontal_fov>${camera_fov}</horizontal_fov>
+          <image>
+            <width>${camera_resolution_width}</width>
+            <height>${camera_resolution_height}</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.05</near>
+            <far>8.0</far>
+          </clip>
+        </camera>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:gazebo_camera link_name="camera_high_link" topic_name="/model/disc_robot/camera_high/image_raw" sensor_name="camera_high" />
+
+  <gazebo>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+  </gazebo>
+
+  <!-- Sliding Casters friction & physics -->
+  <gazebo reference="front_caster_link">
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <visual>
+      <material>
+        <ambient>0.8 0.8 0.8 1.0</ambient>
+        <diffuse>0.8 0.8 0.8 1.0</diffuse>
+        <specular>0.8 0.8 0.8 1.0</specular>
+      </material>
+    </visual>
+  </gazebo>
+
+  <gazebo reference="back_caster_link">
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <visual>
+      <material>
+        <ambient>0.8 0.8 0.8 1.0</ambient>
+        <diffuse>0.8 0.8 0.8 1.0</diffuse>
+        <specular>0.8 0.8 0.8 1.0</specular>
+      </material>
+    </visual>
+  </gazebo>
+
+</robot>
